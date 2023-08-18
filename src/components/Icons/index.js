@@ -14,3 +14,5 @@ export {default as Plus} from './Plus';
 export {default as ProfileEmpty} from './ProfileEmpty';
 export {default as ProfileFull} from './ProfileFull';
 export {default as Username} from './Username';
+export {default as Edit} from './Edit';
+export {default as Pencil} from './Pencil';

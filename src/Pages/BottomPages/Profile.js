@@ -13,17 +13,31 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
 
 import colors from '../../styles/colors';
-import {Female, Logout, Mail, Male, Phone, Plus} from '../../components/Icons';
+import {
+  Edit,
+  Female,
+  Logout,
+  Mail,
+  Male,
+  Phone,
+  Plus,
+} from '../../components/Icons';
 import {addUserInfo} from '../../redux/reducers';
+import EditProfileModal from '../../components/modal/EditProfileModal';
 
 const Profile = ({navigation}) => {
   const userInfo = useSelector(state => state.userInfo);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [userAge, setUserAge] = useState('');
   const dispatch = useDispatch();
 
   async function handleLogout() {
     await auth().signOut();
     navigation.navigate('AuthPages');
+  }
+
+  function handleEditProfile() {
+    setEditModalVisible(true);
   }
 
   useEffect(() => {
@@ -56,7 +70,8 @@ const Profile = ({navigation}) => {
       if (response.didCancel || response.errorCode) {
         showMessage({
           message: 'Something went wrong.',
-          type: 'danger',
+          type: 'warning',
+          floating: true,
         });
       } else {
         const path = response.assets[0].uri;
@@ -128,13 +143,28 @@ const Profile = ({navigation}) => {
           </View>
           {userInfo?.gender === 'Male' ? <Male /> : <Female />}
         </View>
-        <TouchableOpacity style={styles.infos_containers} activeOpacity={0.7}>
-          <View style={styles.infos_text_containers}>
-            <Text style={styles.logout_text}>Logout</Text>
-          </View>
-          <Logout onPress={handleLogout} />
-        </TouchableOpacity>
+        <View style={styles.button_container}>
+          <TouchableOpacity
+            style={styles.button_info_container}
+            activeOpacity={0.7}
+            onPress={handleEditProfile}>
+            <Text style={styles.button_text}>Edit Profile</Text>
+            <Edit />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.logout_info_container}
+            activeOpacity={0.7}
+            onPress={handleLogout}>
+            <Text style={styles.button_text}>Logout</Text>
+            <Logout />
+          </TouchableOpacity>
+        </View>
       </View>
+      <EditProfileModal
+        isVisible={editModalVisible}
+        onPressClose={() => setEditModalVisible(false)}
+        onClose={() => setEditModalVisible(false)}
+      />
     </View>
   );
 };
@@ -219,6 +249,41 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
   },
   logout_text: {
+    fontFamily: 'Poppins-Medium',
+    color: colors.black,
+    fontSize: 16,
+  },
+  button_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.lightGray,
+    height: 75,
+  },
+  button_info_container: {
+    borderRightWidth: 2,
+    borderBottomWidth: 2,
+    borderColor: colors.gray,
+    width: '50%',
+    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: 25,
+    paddingLeft: 20,
+  },
+  logout_info_container: {
+    borderBottomWidth: 2,
+    borderColor: colors.gray,
+    width: '50%',
+    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: 30,
+    paddingLeft: 20,
+  },
+  button_text: {
     fontFamily: 'Poppins-Medium',
     color: colors.black,
     fontSize: 16,

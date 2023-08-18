@@ -34,7 +34,7 @@ const Login = ({navigation}) => {
     }
   }
 
-  async function handleLogin(formValues) {
+  async function handleLogin() {
     dispatch(changeButtonLoading(true));
     try {
       //Login function.
