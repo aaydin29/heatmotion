@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "411934227451",
+    "project_id": "heatmotion-4f34c",
+    "storage_bucket": "heatmotion-4f34c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411934227451:android:c724a0958f5bba43f0295e",
+        "android_client_info": {
+          "package_name": "com.heatmotion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411934227451-dfk107jrhf46l66a17tpo11i3viendhh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb0Dv-yjzIZqDN0UvIYj_NDyjJbnz_uy0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411934227451-dfk107jrhf46l66a17tpo11i3viendhh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
