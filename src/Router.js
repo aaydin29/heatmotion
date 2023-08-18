@@ -4,7 +4,7 @@ import React from 'react';
 const Router = () => {
   return (
     <View>
-      <Text>Router</Text>
+      <Text>Routerr</Text>
     </View>
   );
 };
