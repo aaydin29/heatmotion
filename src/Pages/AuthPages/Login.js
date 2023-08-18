@@ -49,6 +49,7 @@ const Login = ({navigation}) => {
       });
       dispatch(changeButtonLoading(false));
       navigation.navigate('BottomPages');
+      setInitialFormValues({email: '', password: ''});
     } catch (error) {
       showMessage({
         message: authErrorMessages(error.code),

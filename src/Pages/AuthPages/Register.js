@@ -125,6 +125,15 @@ const Register = ({navigation}) => {
       });
       dispatch(changeButtonLoading(false));
       navigation.navigate('Login');
+      setInitialFormValues({
+        username: '',
+        birthday: '',
+        phoneNumber: '',
+        email: '',
+        password: '',
+        repassword: '',
+        gender: 'Male',
+      });
     } catch (error) {
       showMessage({
         message: authErrorMessages(error.code),
