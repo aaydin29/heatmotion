@@ -9,21 +9,54 @@ import colors from '../../styles/colors';
 import AuthInput from '../../components/cards/Input/AuthInput';
 import {EyeClose, EyeOpen, Key, Mail} from '../../components/Icons';
 import AuthButton from '../../components/cards/Button/AuthButton';
+import {changeButtonLoading} from '../../redux/reducers';
+import authErrorMessages from '../../utils/authErrorMessages';
 
 const Login = ({navigation}) => {
+  const [initialFormValues, setInitialFormValues] = useState({
+    email: '',
+    password: '',
+  });
   const [keyVisible, setKeyVisible] = useState(true);
-  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   function handleCreate() {
     navigation.navigate('Register');
   }
 
   function handleKeyVisible() {
-    setKeyVisible(false);
+    if (initialFormValues.password) {
+      setKeyVisible(false);
 
-    setTimeout(() => {
-      setKeyVisible(true);
-    }, 2500);
+      setTimeout(() => {
+        setKeyVisible(true);
+      }, 2500);
+    }
+  }
+
+  async function handleLogin(formValues) {
+    dispatch(changeButtonLoading(true));
+    try {
+      //Login function.
+      await auth().signInWithEmailAndPassword(
+        initialFormValues.email,
+        initialFormValues.password,
+      );
+      showMessage({
+        message: 'Login successful!',
+        type: 'success',
+        floating: true,
+      });
+      dispatch(changeButtonLoading(false));
+      navigation.navigate('BottomPages');
+    } catch (error) {
+      showMessage({
+        message: authErrorMessages(error.code),
+        type: 'danger',
+        floating: true,
+      });
+      dispatch(changeButtonLoading(false));
+    }
   }
 
   return (
@@ -36,17 +69,38 @@ const Login = ({navigation}) => {
         <Text style={styles.app_name}>HeatMotion</Text>
       </View>
       <View style={styles.bottom_info_container}>
-        <AuthInput placeholder="Email" icon={<Mail />} />
-        <AuthInput
-          value={password}
-          onChangeText={text => setPassword(text)}
-          placeholder="Password"
-          secureTextEntry={keyVisible ? true : false}
-          icon={<Key />}
-          iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
-          iconTwoOnPress={password ? handleKeyVisible : null}
-        />
-        <AuthButton text={'Login'} />
+        <Formik initialValues={initialFormValues} onSubmit={handleLogin}>
+          {({handleSubmit}) => (
+            <>
+              <AuthInput
+                placeholder="Email"
+                icon={<Mail />}
+                value={initialFormValues.email}
+                onChangeText={text =>
+                  setInitialFormValues({
+                    ...initialFormValues,
+                    email: text,
+                  })
+                }
+              />
+              <AuthInput
+                value={initialFormValues.password}
+                onChangeText={text =>
+                  setInitialFormValues({
+                    ...initialFormValues,
+                    password: text,
+                  })
+                }
+                placeholder="Password"
+                secureTextEntry={keyVisible ? true : false}
+                icon={<Key />}
+                iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
+                iconTwoOnPress={handleKeyVisible}
+              />
+              <AuthButton text={'Login'} onPress={handleSubmit} />
+            </>
+          )}
+        </Formik>
         <Text style={styles.create_text}>
           You don't have an account? {''}
           <Text style={styles.create_title} onPress={handleCreate}>

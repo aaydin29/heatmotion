@@ -30,17 +30,16 @@ import {
   Username,
 } from '../../components/Icons';
 
-const initialFormValues = {
-  username: '',
-  birthday: '',
-  phoneNumber: '',
-  email: '',
-  password: '',
-  repassword: '',
-};
-
 const Register = ({navigation}) => {
-  const [gender, setGender] = useState('Male');
+  const [initialFormValues, setInitialFormValues] = useState({
+    username: '',
+    birthday: '',
+    phoneNumber: '',
+    email: '',
+    password: '',
+    repassword: '',
+    gender: 'Male',
+  });
   const [keyVisible, setKeyVisible] = useState(true);
   const dispatch = useDispatch();
 
@@ -49,11 +48,13 @@ const Register = ({navigation}) => {
   }
 
   function handleKeyVisible() {
-    setKeyVisible(false);
+    if (initialFormValues.password || initialFormValues.repassword) {
+      setKeyVisible(false);
 
-    setTimeout(() => {
-      setKeyVisible(true);
-    }, 2500);
+      setTimeout(() => {
+        setKeyVisible(true);
+      }, 2500);
+    }
   }
 
   function handleBirthday(text, setFieldValue) {
@@ -70,12 +71,20 @@ const Register = ({navigation}) => {
       }
     }
     setFieldValue('birthday', formattedDate);
+    setInitialFormValues({...initialFormValues, birthday: formattedDate});
   }
 
-  async function handleRegister(formValues) {
+  async function handleRegister() {
     dispatch(changeButtonLoading(true));
-    const {username, birthday, phoneNumber, email, password, repassword} =
-      formValues;
+    const {
+      username,
+      birthday,
+      phoneNumber,
+      email,
+      password,
+      repassword,
+      gender,
+    } = initialFormValues;
     if (password !== repassword) {
       showMessage({
         message: 'Passwords do not match!',
@@ -137,18 +146,23 @@ const Register = ({navigation}) => {
       </View>
       <View style={styles.bottom_container}>
         <Formik initialValues={initialFormValues} onSubmit={handleRegister}>
-          {({values, handleChange, handleSubmit, setFieldValue}) => (
+          {({handleSubmit, setFieldValue}) => (
             <>
               <AuthInput
                 placeholder={'Full Name'}
                 icon={<Username />}
-                value={values.username}
-                onChangeText={handleChange('username')}
+                value={initialFormValues.username}
+                onChangeText={text =>
+                  setInitialFormValues({
+                    ...initialFormValues,
+                    username: text,
+                  })
+                }
               />
               <AuthInput
                 placeholder={'Birthday dd/mm/yy'}
                 icon={<Birthday />}
-                value={values.birthday}
+                value={initialFormValues.birthday}
                 onChangeText={text => handleBirthday(text, setFieldValue)}
                 maxLength={10}
                 keyboardType="numeric"
@@ -158,43 +172,61 @@ const Register = ({navigation}) => {
                 icon={<Phone />}
                 keyboardType="numeric"
                 maxLength={15}
-                value={values.phoneNumber}
-                onChangeText={handleChange('phoneNumber')}
+                value={initialFormValues.phoneNumber}
+                onChangeText={text =>
+                  setInitialFormValues({
+                    ...initialFormValues,
+                    phoneNumber: text,
+                  })
+                }
               />
               <AuthInput
                 placeholder={'Email'}
                 icon={<Mail />}
-                value={values.email}
-                onChangeText={handleChange('email')}
+                value={initialFormValues.email}
+                onChangeText={text =>
+                  setInitialFormValues({
+                    ...initialFormValues,
+                    email: text,
+                  })
+                }
               />
               <AuthInput
                 placeholder={'Password'}
-                value={values.password}
-                onChangeText={handleChange('password')}
+                value={initialFormValues.password}
+                onChangeText={text =>
+                  setInitialFormValues({
+                    ...initialFormValues,
+                    password: text,
+                  })
+                }
                 icon={<Key />}
                 iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
-                iconTwoOnPress={
-                  initialFormValues.password ? handleKeyVisible : null
-                }
+                iconTwoOnPress={handleKeyVisible}
                 secureTextEntry={keyVisible ? true : false}
               />
               <AuthInput
                 placeholder={'Confirm Password'}
-                value={values.repassword}
-                onChangeText={handleChange('repassword')}
+                value={initialFormValues.repassword}
+                onChangeText={text =>
+                  setInitialFormValues({
+                    ...initialFormValues,
+                    repassword: text,
+                  })
+                }
                 icon={<Key />}
                 iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
-                iconTwoOnPress={
-                  initialFormValues.repassword ? handleKeyVisible : null
-                }
+                iconTwoOnPress={handleKeyVisible}
                 secureTextEntry={keyVisible ? true : false}
               />
               <View style={styles.gender_container}>
                 <TouchableOpacity
                   style={styles.male_button_container}
-                  onPress={() => setGender('Male')}
+                  onPress={() =>
+                    setInitialFormValues({...initialFormValues, gender: 'Male'})
+                  }
                   activeOpacity={0.7}>
-                  {gender === 'Male' && (
+                  {initialFormValues.gender === 'Male' && (
                     <View style={styles.checkBox}>
                       <Check />
                     </View>
@@ -204,9 +236,14 @@ const Register = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.female_button_container}
-                  onPress={() => setGender('Female')}
+                  onPress={() =>
+                    setInitialFormValues({
+                      ...initialFormValues,
+                      gender: 'Female',
+                    })
+                  }
                   activeOpacity={0.7}>
-                  {gender === 'Female' && (
+                  {initialFormValues.gender === 'Female' && (
                     <View style={styles.checkBox}>
                       <Check />
                     </View>
