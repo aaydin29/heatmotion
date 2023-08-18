@@ -8,6 +8,7 @@ import AuthButton from '../../components/cards/Button/AuthButton';
 
 const Login = ({navigation}) => {
   const [keyVisible, setKeyVisible] = useState(true);
+  const [password, setPassword] = useState('');
 
   function handleCreate() {
     navigation.navigate('Register');
@@ -18,7 +19,7 @@ const Login = ({navigation}) => {
 
     setTimeout(() => {
       setKeyVisible(true);
-    }, 3000);
+    }, 2500);
   }
 
   return (
@@ -33,11 +34,13 @@ const Login = ({navigation}) => {
       <View style={styles.bottom_info_container}>
         <AuthInput placeholder="Email" icon={<Mail />} />
         <AuthInput
+          value={password}
+          onChangeText={text => setPassword(text)}
           placeholder="Password"
           secureTextEntry={keyVisible ? true : false}
           icon={<Key />}
           iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
-          iconTwoOnPress={handleKeyVisible}
+          iconTwoOnPress={password ? handleKeyVisible : null}
         />
         <AuthButton text={'Login'} />
         <Text style={styles.create_text}>

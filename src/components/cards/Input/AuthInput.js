@@ -50,7 +50,7 @@ const AuthInput = ({
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        maxLength={maxLength}
+        maxLength={40}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
         value={value}
