@@ -16,7 +16,7 @@ const AuthInput = ({
   const styles = StyleSheet.create({
     container: {
       width: '80%',
-      height: 50,
+      height: 45,
       backgroundColor: colors.lightGray,
       borderRadius: 5,
       elevation: 3,

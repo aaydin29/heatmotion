@@ -1,22 +1,48 @@
-import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {showMessage} from 'react-native-flash-message';
+import {Formik} from 'formik';
+import auth from '@react-native-firebase/auth';
+
 import colors from '../../styles/colors';
+import AuthButton from '../../components/cards/Button/AuthButton';
 import AuthInput from '../../components/cards/Input/AuthInput';
+import {addUserInfo, changeButtonLoading} from '../../redux/reducers';
+import authErrorMessages from '../../utils/authErrorMessages';
 import {
   Birthday,
+  Check,
   EyeClose,
   EyeOpen,
+  Female,
   Key,
   Mail,
+  Male,
   Phone,
   Username,
 } from '../../components/Icons';
-import AuthButton from '../../components/cards/Button/AuthButton';
+
+const initialFormValues = {
+  username: '',
+  birthday: '',
+  phoneNumber: '',
+  email: '',
+  password: '',
+  repassword: '',
+};
 
 const Register = ({navigation}) => {
+  const [gender, setGender] = useState('Male');
   const [keyVisible, setKeyVisible] = useState(true);
-  const [password, setPassword] = useState('');
-  const [passwordTwo, setPasswordTwo] = useState('');
+  const dispatch = useDispatch();
 
   function handleBackLogin() {
     navigation.navigate('Login');
@@ -30,6 +56,76 @@ const Register = ({navigation}) => {
     }, 2500);
   }
 
+  function handleBirthday(text, setFieldValue) {
+    // It allows the Birthday to be written in dd/mm/yyyy format.
+    const numbersOnly = text.replace(/\D/g, '');
+    let formattedDate = '';
+    if (numbersOnly.length > 0) {
+      formattedDate += numbersOnly.substring(0, 2);
+      if (numbersOnly.length >= 3) {
+        formattedDate += '/' + numbersOnly.substring(2, 4);
+        if (numbersOnly.length >= 5) {
+          formattedDate += '/' + numbersOnly.substring(4, 8);
+        }
+      }
+    }
+    setFieldValue('birthday', formattedDate);
+  }
+
+  async function handleRegister(formValues) {
+    dispatch(changeButtonLoading(true));
+    const {username, birthday, phoneNumber, email, password, repassword} =
+      formValues;
+    if (password !== repassword) {
+      showMessage({
+        message: 'Passwords do not match!',
+        type: 'danger',
+        floating: true,
+      });
+      dispatch(changeButtonLoading(false));
+      return;
+    }
+    if (
+      !(username && phoneNumber && birthday && email && password && repassword)
+    ) {
+      showMessage({
+        message: 'Please fill in all fields!',
+        type: 'danger',
+        floating: true,
+      });
+      dispatch(changeButtonLoading(false));
+      return;
+    }
+    try {
+      // Registration function.
+      await auth().createUserWithEmailAndPassword(email, repassword);
+      dispatch(
+        addUserInfo({
+          name: username,
+          birthday: birthday,
+          phoneNumber: phoneNumber,
+          email: email,
+          gender: gender,
+          password: password,
+        }),
+      );
+      showMessage({
+        message: 'Account created successfully.',
+        type: 'success',
+        floating: true,
+      });
+      dispatch(changeButtonLoading(false));
+      navigation.navigate('Login');
+    } catch (error) {
+      showMessage({
+        message: authErrorMessages(error.code),
+        type: 'danger',
+        floating: true,
+      });
+      dispatch(changeButtonLoading(false));
+    }
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.top_container}>
@@ -40,29 +136,89 @@ const Register = ({navigation}) => {
         <Text style={styles.app_name}>HeatMotion</Text>
       </View>
       <View style={styles.bottom_container}>
-        <AuthInput placeholder={'Full Name'} icon={<Username />} />
-        <AuthInput placeholder={'Birthday'} icon={<Birthday />} />
-        <AuthInput placeholder={'Phone Number'} icon={<Phone />} />
-        <AuthInput placeholder={'Email'} icon={<Mail />} />
-        <AuthInput
-          placeholder={'Password'}
-          value={password}
-          onChangeText={text => setPassword(text)}
-          icon={<Key />}
-          iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
-          iconTwoOnPress={password ? handleKeyVisible : null}
-          secureTextEntry={keyVisible ? true : false}
-        />
-        <AuthInput
-          placeholder={'Confirm Password'}
-          value={passwordTwo}
-          onChangeText={text => setPasswordTwo(text)}
-          icon={<Key />}
-          iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
-          iconTwoOnPress={passwordTwo ? handleKeyVisible : null}
-          secureTextEntry={keyVisible ? true : false}
-        />
-        <AuthButton text={'Register'} />
+        <Formik initialValues={initialFormValues} onSubmit={handleRegister}>
+          {({values, handleChange, handleSubmit, setFieldValue}) => (
+            <>
+              <AuthInput
+                placeholder={'Full Name'}
+                icon={<Username />}
+                value={values.username}
+                onChangeText={handleChange('username')}
+              />
+              <AuthInput
+                placeholder={'Birthday dd/mm/yy'}
+                icon={<Birthday />}
+                value={values.birthday}
+                onChangeText={text => handleBirthday(text, setFieldValue)}
+                maxLength={10}
+                keyboardType="numeric"
+              />
+              <AuthInput
+                placeholder={'Phone Number'}
+                icon={<Phone />}
+                keyboardType="numeric"
+                maxLength={15}
+                value={values.phoneNumber}
+                onChangeText={handleChange('phoneNumber')}
+              />
+              <AuthInput
+                placeholder={'Email'}
+                icon={<Mail />}
+                value={values.email}
+                onChangeText={handleChange('email')}
+              />
+              <AuthInput
+                placeholder={'Password'}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                icon={<Key />}
+                iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
+                iconTwoOnPress={
+                  initialFormValues.password ? handleKeyVisible : null
+                }
+                secureTextEntry={keyVisible ? true : false}
+              />
+              <AuthInput
+                placeholder={'Confirm Password'}
+                value={values.repassword}
+                onChangeText={handleChange('repassword')}
+                icon={<Key />}
+                iconTwo={keyVisible ? <EyeClose /> : <EyeOpen />}
+                iconTwoOnPress={
+                  initialFormValues.repassword ? handleKeyVisible : null
+                }
+                secureTextEntry={keyVisible ? true : false}
+              />
+              <View style={styles.gender_container}>
+                <TouchableOpacity
+                  style={styles.male_button_container}
+                  onPress={() => setGender('Male')}
+                  activeOpacity={0.7}>
+                  {gender === 'Male' && (
+                    <View style={styles.checkBox}>
+                      <Check />
+                    </View>
+                  )}
+                  <Male />
+                  <Text style={styles.gender_text}>Male</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.female_button_container}
+                  onPress={() => setGender('Female')}
+                  activeOpacity={0.7}>
+                  {gender === 'Female' && (
+                    <View style={styles.checkBox}>
+                      <Check />
+                    </View>
+                  )}
+                  <Female />
+                  <Text style={styles.gender_text}>Female</Text>
+                </TouchableOpacity>
+              </View>
+              <AuthButton text={'Register'} onPress={handleSubmit} />
+            </>
+          )}
+        </Formik>
         <Text style={styles.backLogin_text}>
           Already have an account? {''}
           <Text style={styles.backLogin_title} onPress={handleBackLogin}>
@@ -102,6 +258,50 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '80%',
     alignItems: 'center',
+  },
+  gender_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '80%',
+    margin: 10,
+  },
+  male_button_container: {
+    width: '45%',
+    height: 45,
+    borderRadius: 5,
+    backgroundColor: colors.lightGray,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  female_button_container: {
+    width: '45%',
+    height: 45,
+    borderRadius: 5,
+    backgroundColor: colors.lightGray,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  gender_text: {
+    marginLeft: 15,
+    color: colors.inputTextGray,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 15,
+  },
+  checkBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 5,
+    backgroundColor: colors.oceanBlue,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: -7.5,
+    elevation: 2,
   },
   backLogin_text: {
     fontFamily: 'Poppins-Regular',

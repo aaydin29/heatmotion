@@ -1,8 +1,12 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {Formik} from 'formik';
+import auth from '@react-native-firebase/auth';
+import {showMessage} from 'react-native-flash-message';
+
 import colors from '../../styles/colors';
 import AuthInput from '../../components/cards/Input/AuthInput';
-
 import {EyeClose, EyeOpen, Key, Mail} from '../../components/Icons';
 import AuthButton from '../../components/cards/Button/AuthButton';
 
