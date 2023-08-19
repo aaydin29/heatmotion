@@ -5,6 +5,7 @@ const initialState = {
   userSession: false,
   userInfo: {},
   userLocation: {},
+  userLocationHistory: [],
 };
 
 const Slice = createSlice({
@@ -23,6 +24,9 @@ const Slice = createSlice({
     changeUserLocation: (state, action) => {
       state.userLocation = action.payload;
     },
+    changeUserLocationHistory: (state, action) => {
+      state.userLocationHistory = action.payload;
+    },
   },
 });
 
@@ -31,5 +35,6 @@ export const {
   addUserInfo,
   changeUserLocation,
   changeUserSession,
+  changeUserLocationHistory,
 } = Slice.actions;
 export default Slice.reducer;

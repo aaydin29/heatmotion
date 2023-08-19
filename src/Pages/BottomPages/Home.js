@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, StatusBar, Image} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import MapView, {Marker, Heatmap} from 'react-native-maps';
 
@@ -9,18 +9,30 @@ const Home = () => {
   const userInfo = useSelector(state => state.userInfo);
   const [heatmapData, setHeatmapData] = useState([]);
   const userLocation = useSelector(state => state.userLocation);
+  const userLocationHistory = useSelector(state => state.userLocationHistory);
+  const mapRef = useRef();
 
   useEffect(() => {
-    if (userLocation) {
-      setHeatmapData(prevData => [
-        ...prevData,
-        {
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-        },
-      ]);
+    if (userLocationHistory?.length > 0) {
+      setHeatmapData(
+        userLocationHistory?.map(location => ({
+          latitude: location?.latitude,
+          longitude: location?.longitude,
+        })),
+      );
+    } else {
+      setHeatmapData([]);
     }
-  }, [userLocation]);
+  }, [userLocationHistory]);
+
+  function handleMarkerSelect() {
+    mapRef.current.animateToRegion({
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -43,21 +55,24 @@ const Home = () => {
           />
         )}
       </View>
-      <MapView style={styles.mapview}>
+      <MapView ref={mapRef} style={styles.mapview}>
         {userLocation && (
           <Marker
+            onPress={handleMarkerSelect}
             coordinate={{
               latitude: userLocation.latitude,
               longitude: userLocation.longitude,
             }}
           />
         )}
-        <Heatmap
-          points={heatmapData}
-          radius={50}
-          opacity={0.7}
-          gradientSmoothing={10}
-        />
+        {heatmapData.length > 0 && (
+          <Heatmap
+            points={heatmapData}
+            radius={50}
+            opacity={0.7}
+            gradientSmoothing={10}
+          />
+        )}
       </MapView>
     </View>
   );

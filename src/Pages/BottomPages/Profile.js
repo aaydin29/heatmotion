@@ -22,7 +22,7 @@ import {
   Phone,
   Plus,
 } from '../../components/Icons';
-import {addUserInfo} from '../../redux/reducers';
+import {addUserInfo, changeUserLocationHistory} from '../../redux/reducers';
 import EditProfileModal from '../../components/modal/EditProfileModal';
 
 const Profile = () => {
@@ -33,6 +33,7 @@ const Profile = () => {
 
   async function handleLogout() {
     await auth().signOut();
+    dispatch(changeUserLocationHistory([]));
   }
 
   function handleEditProfile() {

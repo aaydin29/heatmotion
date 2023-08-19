@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import Geolocation from '@react-native-community/geolocation';
-import {changeUserLocation} from '../redux/reducers';
+import {changeUserLocation, changeUserLocationHistory} from '../redux/reducers';
 import BackgroundService from 'react-native-background-actions';
 
 const sleep = time => new Promise(resolve => setTimeout(resolve, time));
@@ -9,25 +9,37 @@ const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 const FetchUserLocation = () => {
   const userLocation = useSelector(state => state.userLocation);
   const userSession = useSelector(state => state.userSession);
+  const userLocationHistory = useSelector(state => state.userLocationHistory);
   const dispatch = useDispatch();
-
-  //   console.log(userLocation);
 
   const getLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
+
+        const id = Date.now().toString();
+
         dispatch(
           changeUserLocation({
             latitude: latitude,
             longitude: longitude,
           }),
         );
+
+        const newHistory = {
+          id: id,
+          latitude: latitude,
+          longitude: longitude,
+        };
+
+        const updatedHistory = [...userLocationHistory, newHistory];
+
+        dispatch(changeUserLocationHistory(updatedHistory));
       },
       error => {
-        console.error(error);
+        console.log('error', error);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      {enableHighAccuracy: true, timeout: 300000, maximumAge: 10000},
     );
   };
 
