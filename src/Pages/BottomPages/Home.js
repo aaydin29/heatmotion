@@ -1,12 +1,26 @@
 import {StyleSheet, Text, View, StatusBar, Image} from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, Heatmap} from 'react-native-maps';
 
 import colors from '../../styles/colors';
 
 const Home = () => {
   const userInfo = useSelector(state => state.userInfo);
+  const [heatmapData, setHeatmapData] = useState([]);
+  const userLocation = useSelector(state => state.userLocation);
+
+  useEffect(() => {
+    if (userLocation) {
+      setHeatmapData(prevData => [
+        ...prevData,
+        {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+        },
+      ]);
+    }
+  }, [userLocation]);
 
   return (
     <View style={styles.container}>
@@ -29,7 +43,22 @@ const Home = () => {
           />
         )}
       </View>
-      <MapView style={styles.mapview} />
+      <MapView style={styles.mapview}>
+        {userLocation && (
+          <Marker
+            coordinate={{
+              latitude: userLocation.latitude,
+              longitude: userLocation.longitude,
+            }}
+          />
+        )}
+        <Heatmap
+          points={heatmapData}
+          radius={50}
+          opacity={0.7}
+          gradientSmoothing={10}
+        />
+      </MapView>
     </View>
   );
 };
@@ -70,5 +99,14 @@ const styles = StyleSheet.create({
   },
   mapview: {
     flex: 1,
+  },
+  marker_container: {
+    width: 40,
+    height: 40,
+  },
+  marker_photo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });

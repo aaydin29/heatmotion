@@ -30,13 +30,13 @@ const FetchUserLocation = () => {
   useEffect(() => {
     getLocation();
 
-    const intervalId = setInterval(() => {
-      getLocation();
-    }, 10000);
+    // const intervalId = setInterval(() => {
+    //   getLocation();
+    // }, 10000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
