@@ -27,8 +27,8 @@ const Home = () => {
 
   function handleMarkerSelect() {
     mapRef.current.animateToRegion({
-      latitude: userLocation.latitude,
-      longitude: userLocation.longitude,
+      latitude: userLocation?.latitude,
+      longitude: userLocation?.longitude,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     });
@@ -56,7 +56,7 @@ const Home = () => {
         )}
       </View>
       <MapView ref={mapRef} style={styles.mapview}>
-        {userLocation && (
+        {userLocation && userLocation.latitude && userLocation.longitude && (
           <Marker
             onPress={handleMarkerSelect}
             coordinate={{
@@ -65,7 +65,7 @@ const Home = () => {
             }}
           />
         )}
-        {heatmapData.length > 0 && (
+        {heatmapData?.length > 0 && (
           <Heatmap
             points={heatmapData}
             radius={50}
