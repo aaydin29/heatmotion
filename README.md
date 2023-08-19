@@ -1,79 +1,86 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# HeatMotion - React Native Map Heat Tracking App
 
-# Getting Started
+HeatMotion is a mobile application where users can register and log in, view their movements as a heat map on the map and edit their profiles.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## App Video
 
-## Step 1: Start the Metro Server
+For high resolution on Youtube = https://youtu.be/mUa6O3SxPcc
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
-To start Metro, run the following command from the _root_ of your React Native project:
 
-```bash
-# using npm
-npm start
+https://github.com/aaydin29/heatmotion/assets/118750784/8d68eff8-dd4d-453d-ba27-39d6cd336728
 
-# OR using Yarn
-yarn start
-```
 
-## Step 2: Start your Application
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+_____________________________________________________
 
-### For Android
+# Installation
+## Requirements
+- Node.js
+- React Native CLI (0.72.1)
+- Development environments for iOS and/or Android (Xcode, Android Studio)
 
-```bash
-# using npm
-npm run android
+## Installing Project Dependencies
+1- Clone this repository to a local directory:
+~~~ 
+git clone https://github.com/aaydin29/heatmotion.git
+~~~
+2- Navigate to the project directory:
+~~~
+cd heatmotion
+~~~
+3- Install the required dependencies by running the following command:
+~~~
+npm install
+~~~
 
-# OR using Yarn
-yarn android
-```
+## Running the Application
+### For iOS:
+~~~
+npx react-native run-ios
+~~~
+### For Android:
+~~~
+npx react-native run-android
+~~~
 
-### For iOS
+_____________________________________________________
 
-```bash
-# using npm
-npm run ios
+# Contributing
+If you would like to contribute to Fasticket, you can follow the steps below:
 
-# OR using Yarn
-yarn ios
-```
+### Creating a Branch
+1- Update the main branch to get the latest updates from the main repository:
+~~~
+git checkout main
+git pull
+~~~
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+2- Create a new branch and switch to it:
+~~~
+git checkout -b new-feature
+~~~
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+### Making Changes
 
-## Step 3: Modifying your App
+1- Make the necessary changes in your code editor and test them.
+2- Commit your changes:
 
-Now that you have successfully run the app, let's modify it.
+~~~
+git add .
+git commit -m "Add new feature: Description"
+~~~
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+### Sending a Pull Request
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+1- Push the branch you created to the remote server:
+~~~
+git push origin new-feature
+~~~
+2- Go to the GitHub repository and click on the "Compare & pull request" button.
+3- Create and submit a pull request that explains your changes.
 
-## Congratulations! :tada:
+_____________________________________________________
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## License
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
