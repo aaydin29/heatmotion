@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
   buttonLoading: false,
   userInfo: {},
+  userLocation: {},
 };
 
 const Slice = createSlice({
@@ -15,8 +16,12 @@ const Slice = createSlice({
     addUserInfo: (state, action) => {
       state.userInfo = action.payload;
     },
+    changeUserLocation: (state, action) => {
+      state.userLocation = action.payload;
+    },
   },
 });
 
-export const {changeButtonLoading, addUserInfo} = Slice.actions;
+export const {changeButtonLoading, addUserInfo, changeUserLocation} =
+  Slice.actions;
 export default Slice.reducer;
