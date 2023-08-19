@@ -25,7 +25,7 @@ import {
 import {addUserInfo} from '../../redux/reducers';
 import EditProfileModal from '../../components/modal/EditProfileModal';
 
-const Profile = ({navigation}) => {
+const Profile = () => {
   const userInfo = useSelector(state => state.userInfo);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [userAge, setUserAge] = useState('');
@@ -33,7 +33,6 @@ const Profile = ({navigation}) => {
 
   async function handleLogout() {
     await auth().signOut();
-    navigation.navigate('AuthPages');
   }
 
   function handleEditProfile() {

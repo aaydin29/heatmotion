@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {StatusBar} from 'react-native';
 import FlashMessage from 'react-native-flash-message';
+import auth from '@react-native-firebase/auth';
+import {useSelector, useDispatch} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -20,6 +22,7 @@ import {
   ProfileEmpty,
   ProfileFull,
 } from './components/Icons';
+import {changeUserSession} from './redux/reducers';
 
 const BottomPages = () => {
   return (
@@ -40,12 +43,25 @@ const AuthPages = () => {
 };
 
 const Router = () => {
+  const userSession = useSelector(state => state.userSession);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    auth().onAuthStateChanged(user => {
+      dispatch(changeUserSession(!!user));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <NavigationContainer>
       <StatusBar backgroundColor={colors.white} barStyle={'dark-content'} />
       <Stack.Navigator screenOptions={screenOptions}>
-        <Stack.Screen name="AuthPages" component={AuthPages} />
-        <Stack.Screen name="BottomPages" component={BottomPages} />
+        {!userSession ? (
+          <Stack.Screen name="AuthPages" component={AuthPages} />
+        ) : (
+          <Stack.Screen name="BottomPages" component={BottomPages} />
+        )}
       </Stack.Navigator>
       <FlashMessage position="top" />
     </NavigationContainer>

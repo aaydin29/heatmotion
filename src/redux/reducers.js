@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   buttonLoading: false,
+  userSession: false,
   userInfo: {},
   userLocation: {},
 };
@@ -13,6 +14,9 @@ const Slice = createSlice({
     changeButtonLoading: (state, action) => {
       state.buttonLoading = action.payload;
     },
+    changeUserSession: (state, action) => {
+      state.userSession = action.payload;
+    },
     addUserInfo: (state, action) => {
       state.userInfo = action.payload;
     },
@@ -22,6 +26,10 @@ const Slice = createSlice({
   },
 });
 
-export const {changeButtonLoading, addUserInfo, changeUserLocation} =
-  Slice.actions;
+export const {
+  changeButtonLoading,
+  addUserInfo,
+  changeUserLocation,
+  changeUserSession,
+} = Slice.actions;
 export default Slice.reducer;
