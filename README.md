@@ -8,7 +8,10 @@ For high resolution on Youtube = https://youtu.be/mUa6O3SxPcc
 
 
 
-https://github.com/aaydin29/heatmotion/assets/118750784/8d68eff8-dd4d-453d-ba27-39d6cd336728
+
+
+https://github.com/aaydin29/heatmotion/assets/118750784/292d14fa-75ed-4675-8770-2dd695f9579b
+
 
 
 
